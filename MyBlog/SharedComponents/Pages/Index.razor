@@ -4,19 +4,21 @@
 @inject IBlogApi Api
 
 <ul>
-    @foreach(var post in Posts)
-    {
+    <Virtualize ItemsProvider="LoadPosts" Context="post">
         <li><a href="/post/@post.Id">@post.Title</a></li>
-    }
+    </Virtualize>
 </ul>
 
 @code {
-    protected List<BlogPost> Posts = [];
-
-    protected override async Task OnInitializedAsync()
+    public int TotalBlogPosts { get; set; }
+    private async ValueTask<ItemsProviderResult<BlogPost>> LoadPosts(ItemsProviderRequest request)
     {
-        Posts = await Api.GetBlogPostsAsync(10, 0);
-        await base.OnInitializedAsync();
+        if(TotalBlogPosts == 0)
+        {
+            TotalBlogPosts = await Api.GetBlogPostCountAsync();
+        }
+        var numBlogPosts = Math.Min(request.Count, TotalBlogPosts - request.StartIndex);
+        var blogPosts = await Api.GetBlogPostsAsync(request.StartIndex, numBlogPosts);
+        return new ItemsProviderResult<BlogPost>(blogPosts, TotalBlogPosts);
     }
-    
 }
