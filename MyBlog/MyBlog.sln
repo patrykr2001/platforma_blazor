@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 
+#
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBlog", "MyBlog\MyBlog.csproj", "{62AE95A1-C914-4E11-A586-A8C997566D73}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{6BB538DD-CAF8-42C8-8DED-581C0E7CAA13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Models", "Data.Models\Data.Models.csproj", "{84B1AB7B-0D57-47F5-A636-8792D7E319CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Components", "Components\Components.csproj", "{E3DFE5EE-7843-4D70-98AD-E0023FD9CDAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,5 +27,9 @@ Global
 		{84B1AB7B-0D57-47F5-A636-8792D7E319CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84B1AB7B-0D57-47F5-A636-8792D7E319CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84B1AB7B-0D57-47F5-A636-8792D7E319CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3DFE5EE-7843-4D70-98AD-E0023FD9CDAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3DFE5EE-7843-4D70-98AD-E0023FD9CDAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3DFE5EE-7843-4D70-98AD-E0023FD9CDAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3DFE5EE-7843-4D70-98AD-E0023FD9CDAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
