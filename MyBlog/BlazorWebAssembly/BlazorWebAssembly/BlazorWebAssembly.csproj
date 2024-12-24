@@ -7,12 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Data.Models\Data.Models.csproj" />
-      <ProjectReference Include="..\Data\Data.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Components\Pages\" />
+        <ProjectReference Include="..\BlazorWebAssembly.Client\BlazorWebAssembly.Client.csproj"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.11"/>
     </ItemGroup>
 
 </Project>
