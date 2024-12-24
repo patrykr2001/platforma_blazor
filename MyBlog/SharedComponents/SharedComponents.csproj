@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>SharedComponents</RootNamespace>
     </PropertyGroup>
 
 
@@ -17,6 +18,16 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Data.Models\Data.Models.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="Pages\Counter.razor" />
+        <AdditionalFiles Include="Pages\Home.razor" />
+        <AdditionalFiles Include="Pages\Weather.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Shared\" />
     </ItemGroup>
 
 </Project>

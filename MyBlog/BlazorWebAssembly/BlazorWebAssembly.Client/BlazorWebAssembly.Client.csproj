@@ -12,4 +12,14 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.11"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Counter.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Home.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Weather.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\SharedComponents\SharedComponents.csproj" />
+    </ItemGroup>
+
 </Project>

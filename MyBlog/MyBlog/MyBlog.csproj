@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\SharedComponents\SharedComponents.csproj" />
       <ProjectReference Include="..\Data.Models\Data.Models.csproj" />
       <ProjectReference Include="..\Data\Data.csproj" />
     </ItemGroup>

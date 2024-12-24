@@ -1,6 +1,7 @@
 using MyBlog.Components;
 using Data;
 using Data.Models.Interfaces;
+using SharedComponents;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,7 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .AddAdditionalAssemblies(typeof(SharedComponents._Imports).Assembly);
 
 app.Run();
