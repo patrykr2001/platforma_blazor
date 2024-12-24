@@ -69,74 +69,166 @@ public class BlogApiJsonDirectAccess : IBlogApi
         Load(ref _tags, _settings.TagsFolder);
         return Task.CompletedTask;
     }
+
+    private async Task SaveAsync<T>(List<T>? list, string folder, string filename, T item)
+    {
+        var filePath = Path.Combine(_settings.DataPath, folder, filename);
+        await File.WriteAllTextAsync(filePath, JsonSerializer.Serialize(item));
+        list ??= new();
+
+        if (!list.Contains(item))
+        {
+            list.Add(item);
+        }
+    }
     
-    public Task<int> GetBlogPostCountAsync()
+    private void DeleteAsync<T>(List<T>? list, string folder, string id)
     {
-        throw new NotImplementedException();
+        var filePath = Path.Combine(_settings.DataPath, folder, id + ".json");
+        if(File.Exists(filePath))
+        {
+            try
+            {
+                File.Delete(filePath);
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+    }
+    
+    public async Task<int> GetBlogPostCountAsync()
+    {
+        await LoadBlogPostsAsync();
+        return _blogPosts?.Count ?? 0;
     }
 
-    public Task<List<BlogPost>?> GetBlogPostsAsync(int take, int skip)
+    public async Task<List<BlogPost>?> GetBlogPostsAsync(int take, int skip)
     {
-        throw new NotImplementedException();
+        await LoadBlogPostsAsync();
+        return _blogPosts?.Skip(skip).Take(take).ToList() ?? [];
     }
 
-    public Task<List<Category>?> GetCategoriesAsync()
+    public async Task<List<Category>?> GetCategoriesAsync()
     {
-        throw new NotImplementedException();
+        await LoadCategoriesAsync();
+        return _categories ?? [];
     }
 
-    public Task<List<Tag>?> GetTagsAsync()
+    public async Task<List<Tag>?> GetTagsAsync()
     {
-        throw new NotImplementedException();
+        await LoadTagsAsync();
+        return _tags ?? [];
     }
 
-    public Task<BlogPost?> GetBlogPostAsync(string id)
+    public async Task<BlogPost?> GetBlogPostAsync(string id)
     {
-        throw new NotImplementedException();
+        await LoadBlogPostsAsync();
+        if(_blogPosts == null)
+        {
+            throw new Exception("Brak wpisów bloga");
+        }
+        return _blogPosts.FirstOrDefault(b => b.Id == id);
     }
 
-    public Task<Category?> GetCategoryAsync(string id)
+    public async Task<Category?> GetCategoryAsync(string id)
     {
-        throw new NotImplementedException();
+        await LoadCategoriesAsync();
+        if(_categories == null)
+        {
+            throw new Exception("Brak kategorii");
+        }
+        return _categories.FirstOrDefault(c => c.Id == id);
     }
 
-    public Task<Tag?> GetTagAsync(string id)
+    public async Task<Tag?> GetTagAsync(string id)
     {
-        throw new NotImplementedException();
+        await LoadTagsAsync();
+        if(_tags == null)
+        {
+            throw new Exception("Brak tagów");
+        }
+        return _tags.FirstOrDefault(t => t.Id == id);
     }
 
-    public Task<BlogPost?> SaveBlogPostAsync(BlogPost item)
+    public async Task<BlogPost?> SaveBlogPostAsync(BlogPost item)
     {
-        throw new NotImplementedException();
+        if (item.Id == null)
+        {
+            item.Id = Guid.NewGuid().ToString();
+        }
+        await SaveAsync(_blogPosts, _settings.BlogPostsFolder, item.Id + ".json", item);
+        return item;
     }
 
-    public Task<Category?> SaveCategoryAsync(Category item)
+    public async Task<Category?> SaveCategoryAsync(Category item)
     {
-        throw new NotImplementedException();
+        if (item.Id == null)
+        {
+            item.Id = Guid.NewGuid().ToString();
+        }
+        await SaveAsync(_categories, _settings.CategoriesFolder, item.Id + ".json", item);
+        return item;
     }
 
-    public Task<Tag?> SaveTagAsync(Tag item)
+    public async Task<Tag?> SaveTagAsync(Tag item)
     {
-        throw new NotImplementedException();
+        if (item.Id == null)
+        {
+            item.Id = Guid.NewGuid().ToString();
+        }
+        await SaveAsync(_tags, _settings.TagsFolder, item.Id + ".json", item);
+        return item;
     }
 
     public Task DeleteBlogPostAsync(string id)
     {
-        throw new NotImplementedException();
+        DeleteAsync(_blogPosts, _settings.BlogPostsFolder, id);
+        if(_blogPosts != null)
+        {
+            var item = _blogPosts.FirstOrDefault(b => b.Id == id);
+            if(item != null)
+            {
+                _blogPosts.Remove(item);
+            }
+        }
+        return Task.CompletedTask;
     }
 
     public Task DeleteCategoryAsync(string id)
     {
-        throw new NotImplementedException();
+        DeleteAsync(_categories, _settings.CategoriesFolder, id);
+        if(_categories != null)
+        {
+            var item = _categories.FirstOrDefault(c => c.Id == id);
+            if(item != null)
+            {
+                _categories.Remove(item);
+            }
+        }
+        return Task.CompletedTask;
     }
 
     public Task DeleteTagAsync(string id)
     {
-        throw new NotImplementedException();
+        DeleteAsync(_tags, _settings.TagsFolder, id);
+        if(_tags != null)
+        {
+            var item = _tags.FirstOrDefault(t => t.Id == id);
+            if(item != null)
+            {
+                _tags.Remove(item);
+            }
+        }
+        return Task.CompletedTask;
     }
 
     public Task InvalidateCacheAsync()
     {
-        throw new NotImplementedException();
+        _blogPosts = null;
+        _categories = null;
+        _tags = null;
+        return Task.CompletedTask;
     }
 }
