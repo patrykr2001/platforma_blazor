@@ -6,7 +6,7 @@
 <ul>
     @foreach(var post in Posts)
     {
-        <li>@post.Title</li>
+        <li><a href="/post/@post.Id">@post.Title</a></li>
     }
 </ul>
 
