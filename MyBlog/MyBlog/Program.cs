@@ -1,7 +1,6 @@
 using MyBlog.Components;
 using Data;
 using Data.Models.Interfaces;
-using Data.Models.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
