@@ -18,7 +18,7 @@
             TotalBlogPosts = await Api.GetBlogPostCountAsync();
         }
         var numBlogPosts = Math.Min(request.Count, TotalBlogPosts - request.StartIndex);
-        var blogPosts = await Api.GetBlogPostsAsync(request.StartIndex, numBlogPosts);
+        var blogPosts = await Api.GetBlogPostsAsync(numBlogPosts, request.StartIndex);
         return new ItemsProviderResult<BlogPost>(blogPosts, TotalBlogPosts);
     }
 }
