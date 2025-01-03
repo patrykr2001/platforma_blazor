@@ -1,10 +1,22 @@
 using BlazorWebAssembly.Components;
+using BlazorWebAssembly.Endpoints;
+using Data;
+using Data.Models.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddOptions<BlogApiJsonDirectAccessSettings>().Configure(options =>
+{
+    options.DataPath = Path.Combine("..", "..", "..", "..", "Data");
+    options.BlogPostsFolder = "BlogPosts";
+    options.CategoriesFolder = "Categories";
+    options.TagsFolder = "Tags";
+});
+builder.Services.AddScoped<IBlogApi, BlogApiJsonDirectAccess>();
 
 var app = builder.Build();
 
@@ -23,7 +35,9 @@ else
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+app.UseRouting();
 app.UseAntiforgery();
+app.MapBlogPostApi();
 
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
