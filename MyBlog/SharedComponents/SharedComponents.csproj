@@ -25,8 +25,4 @@
         <AdditionalFiles Include="Pages\Weather.razor" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Shared\" />
-    </ItemGroup>
-
 </Project>
