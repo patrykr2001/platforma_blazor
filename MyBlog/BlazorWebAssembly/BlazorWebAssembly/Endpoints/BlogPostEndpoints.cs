@@ -12,5 +12,17 @@ public static class BlogPostEndpoints
             {
                 return Results.Ok(await api.GetBlogPostsAsync(numberOfPosts, startIndex));
             });
+
+        app.MapGet("/api/BlogPostCount",
+            async (IBlogApi api) =>
+            {
+                return Results.Ok(await api.GetBlogPostCountAsync());
+            });
+
+        app.MapGet("/api/BlogPosts/{*id}",
+            async (IBlogApi api, string id) =>
+            {
+                return Results.Ok(await api.GetBlogPostAsync(id));
+            });
     }
 }
