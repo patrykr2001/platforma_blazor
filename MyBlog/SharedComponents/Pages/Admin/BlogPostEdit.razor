@@ -6,6 +6,7 @@
 @using Markdig
 @inject IBlogApi Api
 @inject NavigationManager NavigationManager
+@attribute [Authorize]
 
 <EditForm Model="Post" OnValidSubmit="SavePost">
     <DataAnnotationsValidator />

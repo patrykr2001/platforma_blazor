@@ -1,6 +1,24 @@
-﻿<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new []{typeof(SharedComponents._Imports).Assembly}">
-    <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)"/>
-        <FocusOnNavigate RouteData="routeData" Selector="h1"/>
-    </Found>
-</Router>
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using MyBlog.Components.Layout
+<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new []{typeof(SharedComponents._Imports).Assembly}">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+                <Authorizing>
+                    <p>Określanie stanu sesji, czekaj...</p>
+                </Authorizing>
+                <NotAuthorized>
+                    <h1>Przepraszamy</h1>
+                    <p>Nie masz uprawnień, aby wyświetlić tę stronę. Zaloguj się.</p>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="routeData" Selector="h1"/>
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p>Przepraszamy, pod tym adresem nic nie ma.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
