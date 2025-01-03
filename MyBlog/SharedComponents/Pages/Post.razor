@@ -1,6 +1,7 @@
 ﻿@page "/post/{id}"
 @using Data.Models.Interfaces
 @using Data.Models.Models
+@using Markdig
 @inject IBlogApi Api
 @inject NavigationManager NavigationManager
 
@@ -16,7 +17,7 @@
     </HeadContent>
     
     <h2>@BlogPost.Title</h2>
-    @((MarkupString)BlogPost.Text)
+    @((MarkupString)Markdig.Markdown.ToHtml(BlogPost.Text, _pipeline))
 }
 else
 {
@@ -26,11 +27,12 @@ else
 @code {
     [Parameter]
     public string Id { get; set; }
-    
     public BlogPost? BlogPost { get; set; }
+    MarkdownPipeline _pipeline;
     
     protected override async Task OnInitializedAsync()
     {
+        _pipeline = new MarkdownPipelineBuilder().UseEmojiAndSmiley().Build();
         BlogPost = await Api.GetBlogPostAsync(Id);
         await base.OnInitializedAsync();
     }
