@@ -1,0 +1,30 @@
+@page "/admin/blogposts"
+@using Data.Models.Interfaces
+@using Data.Models.Models
+@inject IBlogApi Api
+
+<a href="/admin/blogposts/new">Nowy wpis</a>
+<ul>
+    <Virtualize ItemsProvider="LoadPosts" Context="p">
+        <li>
+            @p.PublishedDate
+            <a href="/admin/blogposts/@p.Id">@p.Title</a>
+        </li>
+    </Virtualize>
+</ul>
+
+@code {
+    public int TotalBlogPosts { get; set; }
+
+    private async ValueTask<ItemsProviderResult<BlogPost>> LoadPosts(ItemsProviderRequest request)
+    {
+        if (TotalBlogPosts == 0)
+        {
+            TotalBlogPosts = await Api.GetBlogPostCountAsync();
+        }
+
+        var numBlogposts = Math.Min(request.Count, TotalBlogPosts - request.StartIndex);
+        List<BlogPost> posts = (await Api.GetBlogPostsAsync(numBlogposts, request.StartIndex)) ?? new();
+        return new ItemsProviderResult<BlogPost>(posts, TotalBlogPosts);
+    }
+}
