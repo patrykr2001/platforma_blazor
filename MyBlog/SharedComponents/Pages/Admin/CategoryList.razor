@@ -3,6 +3,7 @@
 @using Data.Models.Models
 @using SharedComponents.RazorComponents
 @inject IBlogApi Api
+@attribute [Authorize]
 
 <h3>Kategorie</h3>
 <EditForm OnValidSubmit="Save" Model="Item">
