@@ -38,6 +38,8 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAntiforgery();
 app.MapBlogPostApi();
+app.MapCategoryApi();
+app.MapTagApi();
 
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
