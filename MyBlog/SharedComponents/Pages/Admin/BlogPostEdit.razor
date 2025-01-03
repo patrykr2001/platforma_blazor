@@ -1,0 +1,106 @@
+@page "admin/blogposts/new"
+@page "admin/blogposts/{Id}"
+@using Data.Models.Interfaces
+@using Data.Models.Models
+@using SharedComponents.RazorComponents
+@using Markdig
+@inject IBlogApi Api
+@inject NavigationManager NavigationManager
+
+<EditForm Model="Post" OnValidSubmit="SavePost">
+    <DataAnnotationsValidator />
+    <CustomCssClassProvider ProviderType="BootstrapFieldCssClassProvider" />
+    <InputText @bind-Value="Post.Title" />
+    <ValidationMessage For="(() => Post.Title)" />
+    <InputDate @bind-Value="Post.PublishedDate" />
+    <ValidationMessage For="@(() => Post.PublishedDate)" />
+    <InputSelect @bind-Value="_selectedCategory">
+        <option value="0" disabled>Bez kategorii</option>
+        @foreach (var category in Categories)
+        {
+            <option value="@category.Id">@category.Name </option>
+        }
+    </InputSelect>
+    <ul>
+        @foreach (var tag in Tags)
+        {
+            <li>
+                @tag.Name
+                @if (Post.Tags.Any(t => t.Id == tag.Id))
+                {
+                    <button type="button" @onclick="@(() => { Post.Tags.Remove(Post.Tags.Single(t => tag.Id == tag.Id)); })">
+                        Usuń</button>
+                }
+                else
+                {
+                    <button type="button" @onclick="@(() => { Post.Tags.Add(tag); })">Dodaj</button>
+                }
+            </li>
+        }
+    </ul>
+    <InputTextAreaOnInput @bind-Value="Post.Text" @onkeyup="UpdateHTML" />
+    <ValidationMessage For="@(() => Post.Text)" />
+    <button type="submit" class="btn btn-success">Zapisz</button>
+</EditForm>
+
+@code {
+    [Parameter] public string? Id { get; set; }
+    BlogPost Post { get; set; } = new();
+    List<Category> Categories { get; set; } = new();
+    List<Tag> Tags { get; set; } = new();
+    string? _selectedCategory = null;
+    string? markDownAsHTML { get; set; }
+    MarkdownPipeline _pipeline = default!;
+    
+    protected override Task OnInitializedAsync()
+    {
+        _pipeline = new MarkdownPipelineBuilder().UseEmojiAndSmiley().Build();
+        return base.OnInitializedAsync();
+    }
+
+    public async Task SavePost()
+    {
+        if (!string.IsNullOrEmpty(_selectedCategory) && Categories != null)
+        {
+            var category = Categories.FirstOrDefault(c => c.Id == _selectedCategory);
+            if (category != null)
+            {
+                Post.Category = category;
+            }
+        }
+
+        await Api.SaveBlogPostAsync(Post);
+        NavigationManager.NavigateTo("/admin/blogposts");
+    }
+
+    protected void UpdateHTML()
+    {
+        markDownAsHTML = Markdig.Markdown.ToHtml(Post.Text, _pipeline);
+    }
+
+    bool HasTag(Tag tag)
+    {
+        return Post.Tags.Contains(tag);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != null)
+        {
+            var p = await Api.GetBlogPostAsync(Id);
+            if (p != null)
+            {
+                Post = p;
+                if (Post.Category != null)
+                {
+                    _selectedCategory = Post.Category.Id;
+                }
+                UpdateHTML();
+            }
+        }
+
+        Categories = (await Api.GetCategoriesAsync()) ?? new();
+        Tags = (await Api.GetTagsAsync()) ?? new();
+        await base.OnParametersSetAsync();
+    }
+}
