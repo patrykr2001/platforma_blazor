@@ -22,7 +22,6 @@
 
     <ItemGroup>
         <AdditionalFiles Include="Pages\Counter.razor" />
-        <AdditionalFiles Include="Pages\Home.razor" />
         <AdditionalFiles Include="Pages\Weather.razor" />
     </ItemGroup>
 
