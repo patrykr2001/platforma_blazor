@@ -1,0 +1,26 @@
+@typeparam TItemType
+
+<h3>Lista</h3>
+<table>
+    <Virtualize Items="@Items" Context="item">
+        <tr>
+            <td>
+                <button class="btn btn-primary" @onclick="@(() => { SelectEvent.InvokeAsync(item);})">Wybierz</button>
+            </td>
+            <td>
+                @ItemTemplate(item)
+            </td>
+            <td>
+                <button class="btn btn-danger" @onclick="@(() => { DeleteEvent.InvokeAsync(item);})">Usuń</button>
+            </td>
+        </tr>
+    </Virtualize>
+</table>
+
+@code {
+    [Parameter] public List<TItemType> Items { get; set; } = new();
+    [Parameter, EditorRequired] public required RenderFragment<TItemType> ItemTemplate { get; set; }
+    [Parameter] public EventCallback<TItemType> DeleteEvent { get; set; }
+    [Parameter] public EventCallback<TItemType> SelectEvent { get; set; }
+    
+}
